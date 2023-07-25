@@ -1,0 +1,19 @@
+{
+  "name": "api-tracks",
+  "version": "1.0.0",
+  "description": "Api de Trakeo de Archivos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Ab4ch3/API-Tracks.git"
+  },
+  "author": "Miguel Abache",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ab4ch3/API-Tracks/issues"
+  },
+  "homepage": "https://github.com/Ab4ch3/API-Tracks#readme"
+}
