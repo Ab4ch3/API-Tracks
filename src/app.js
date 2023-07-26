@@ -10,7 +10,7 @@ const logger = debug("app:module-app");
 // Importamos en archivo de Config
 import config from "./config/index.js";
 // Importamos Conexion mongo
-import dbConnectMongo from "./databases/mongodb.js";
+import connectMongo from "./databases/mongodb.js";
 // importamos Rutas
 import v1Router from "./routes/v1/index.js";
 
@@ -18,7 +18,7 @@ import v1Router from "./routes/v1/index.js";
 const app = express();
 
 // Iniciamos conexion con mongodb
-dbConnectMongo();
+connectMongo();
 
 //Indicamos que usaremos morgan , y que estamos en desarrollo
 app.use(morgan("dev"));
