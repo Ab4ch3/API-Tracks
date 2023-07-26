@@ -4,11 +4,21 @@ import express from "express";
 import cors from "cors";
 // Importamos Morgan
 import morgan from "morgan";
+// Importamos Debug
+import debug from "debug";
+const logger = debug("app:module-app");
 // Importamos en archivo de Config
 import config from "./config/index.js";
+// Importamos Conexion mongo
+import dbConnectMongo from "./databases/mongodb.js";
+// importamos Rutas
+import v1Router from "./routes/v1/index.js";
 
 // Incialaza el Server de Express
 const app = express();
+
+// Iniciamos conexion con mongodb
+dbConnectMongo();
 
 //Indicamos que usaremos morgan , y que estamos en desarrollo
 app.use(morgan("dev"));
@@ -16,6 +26,9 @@ app.use(morgan("dev"));
 // Indicamos que usarmemos Cors
 app.use(cors());
 
+// Invocamos Rutas
+app.use(v1Router);
+
 app.listen(config.PORT, () => {
-  console.log(`Servidor escuchando por el puerto ${config.PORT}`);
+  logger(`Servidor escuchando por el puerto ${config.PORT}`);
 });
