@@ -25,6 +25,9 @@ app.use(morgan("dev"));
 
 // Indicamos que usarmemos Cors
 app.use(cors());
+//Indicamos que usaremos el middleware de express para habilitar el recibir data al servidor
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Invocamos Rutas
 app.use(v1Router);

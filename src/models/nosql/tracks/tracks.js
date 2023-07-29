@@ -10,7 +10,7 @@ const trackSchema = new Schema({
       return true;
     },
     message: "ERROR_URL",
-  }, //Es para crear un validacion del dato
+  }, //Es para crear un validacion del datos
   artist: {
     name: { type: String },
     nickname: { type: String },

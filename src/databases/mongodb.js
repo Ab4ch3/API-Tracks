@@ -7,11 +7,14 @@ import mongoose from "mongoose";
 import config from "../config/index.js";
 
 const database = async () => {
+  let conection = null;
   try {
-    const conn = await mongoose.connect(config.DB_URI);
-    if (conn) {
+    if (!conection) {
+      conection = await mongoose.connect(config.DB_URI);
       logger(`**** CONNECTED TO MONGODB ATLAS ****`);
     }
+    logger(`**** REUSING TO MONGODB ATLAS ****`);
+    conection;
   } catch (e) {
     logger(`**** CONNECTION ERROR ****`);
     logger(e);
