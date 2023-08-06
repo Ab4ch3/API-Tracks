@@ -14,10 +14,10 @@ const router = routerx();
   En este caso usaremos single() porq solo enviaras un archivo a la vez
   En caso de querer enviar varios usarios multi()
 */
-router.post(
-  "/",
-  uploadMiddlware.single("myfile"),
-  storageController.createFile
-);
+router
+  .get("/:idFile", storageController.getFile)
+  .delete("/:idFile", storageController.deleteFile)
+  .get("/", storageController.getAllFiles)
+  .post("/", uploadMiddlware.single("myfile"), storageController.createFile);
 
 export default router;

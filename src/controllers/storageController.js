@@ -7,6 +7,61 @@ import config from "../config/index.js";
 import storageServices from "../services/storageServices.js";
 export default {
   /**
+   * Traera Todos los Registros
+   * @param {*} req
+   * @param {*} res
+   * @param {*} next
+   */
+  getAllFiles: async (req, res, next) => {
+    try {
+      const allFiles = await storageServices.getAllFiles();
+      res.status(200).json({
+        status: "OK",
+        data: allFiles,
+      });
+    } catch (e) {
+      logger(e);
+      res.status(500).json({
+        status: "ERROR",
+        message: "Internal Server Error",
+      });
+      next(e);
+    }
+  },
+  /**
+   * Traera un solo registro
+   * @param {*} req
+   * @param {*} res
+   * @param {*} next
+   */
+  getFile: async (req, res, next) => {
+    try {
+      const {
+        params: { idFile },
+      } = req;
+      const file = await storageServices.getFile(idFile);
+      if (!file) {
+        res.status(404).send({
+          status: "ERROR",
+          message: "Not Found",
+        });
+      } else {
+        res.status(200).json({
+          status: "OK",
+          data: file,
+        });
+      }
+    } catch (e) {
+      logger(e);
+      res.status(500).json({
+        status: "ERROR",
+        message: "Internal Server Error",
+      });
+      next(e);
+    }
+  },
+
+  /**
    * Crea un registro
    * @param {*} req
    * @param {*} res
@@ -30,6 +85,39 @@ export default {
           status: "OK",
           message: "File Created",
           data: createdFile,
+        });
+      }
+    } catch (e) {
+      logger(e);
+      res.status(500).json({
+        status: "ERROR",
+        message: "Internal Server Error",
+      });
+      next(e);
+    }
+  },
+  /**
+   * Eliminara un registro
+   * @param {*} req
+   * @param {*} res
+   * @param {*} next
+   */
+  deleteFile: async (req, res, next) => {
+    try {
+      const {
+        params: { idFile },
+      } = req;
+      const deletedFile = await storageServices.deleteFile(idFile);
+      if (!deletedFile) {
+        res.status(404).send({
+          status: "ERROR",
+          message: "Not Found",
+        });
+      } else {
+        res.status(200).json({
+          status: "OK",
+          message: "File Deleted",
+          data: deletedFile,
         });
       }
     } catch (e) {
