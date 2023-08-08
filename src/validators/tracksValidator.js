@@ -26,4 +26,4 @@ const validatorCreateTrack = [
   },
 ];
 
-export { validatorCreateTrack };
+export default validatorCreateTrack;
