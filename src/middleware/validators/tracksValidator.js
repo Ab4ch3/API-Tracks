@@ -1,7 +1,7 @@
 // Importmos la funcion check
 import { check } from "express-validator";
 // Importamos el resultado del validador
-import validateResults from "../utils/handleValidator.js";
+import validateResults from "../../utils/handleValidator.js";
 
 /* 
   Aqui Validaremos los datos basados en 
@@ -26,4 +26,4 @@ const validatorCreateTrack = [
   },
 ];
 
-export default validatorCreateTrack;
+export { validatorCreateTrack };
