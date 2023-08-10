@@ -1,13 +1,17 @@
+// Importamos servicios
+import storageServices from "../services/storageServices.js";
 // Importamos debug
 import debug from "debug";
 const logger = debug("app:module-StoragesController");
+// Importamos Errors
+import { handleHttpError } from "../utils/handleErrors.js";
 // Importamos Config
 import config from "../config/index.js";
-// Importamos servicios
-import storageServices from "../services/storageServices.js";
+// Importamos Validador
+import { matchedData } from "express-validator";
 export default {
   /**
-   * Traera Todos los Registros
+   * Get All Files
    * @param {*} req
    * @param {*} res
    * @param {*} next
@@ -21,15 +25,12 @@ export default {
       });
     } catch (e) {
       logger(e);
-      res.status(500).json({
-        status: "ERROR",
-        message: "Internal Server Error",
-      });
+      handleHttpError(res, "ERROR_GET_FILES");
       next(e);
     }
   },
   /**
-   * Traera un solo registro
+   * Get One File
    * @param {*} req
    * @param {*} res
    * @param {*} next
@@ -41,10 +42,7 @@ export default {
       } = req;
       const file = await storageServices.getFile(idFile);
       if (!file) {
-        res.status(404).send({
-          status: "ERROR",
-          message: "Not Found",
-        });
+        handleHttpError(res, "NOT_FOUND", 404);
       } else {
         res.status(200).json({
           status: "OK",
@@ -53,16 +51,13 @@ export default {
       }
     } catch (e) {
       logger(e);
-      res.status(500).json({
-        status: "ERROR",
-        message: "Internal Server Error",
-      });
+      handleHttpError(res, "ERROR_GET_FILE");
       next(e);
     }
   },
 
   /**
-   * Crea un registro
+   * Create File
    * @param {*} req
    * @param {*} res
    * @param {*} next
@@ -74,30 +69,20 @@ export default {
         url: `${config.PUBLIC_URL}/${file.filename}`,
         filename: file.filename,
       };
-      if (!fileData || Object.keys(fileData).length === 0) {
-        res.status(400).send({
-          status: "ERROR",
-          message: "Bad Request",
-        });
-      } else {
-        const createdFile = await storageServices.createFile(fileData);
-        res.status(201).json({
-          status: "OK",
-          message: "File Created",
-          data: createdFile,
-        });
-      }
+      const createdFile = await storageServices.createFile(fileData);
+      res.status(201).json({
+        status: "OK",
+        message: "FILE_CREATED",
+        data: createdFile,
+      });
     } catch (e) {
       logger(e);
-      res.status(500).json({
-        status: "ERROR",
-        message: "Internal Server Error",
-      });
+      handleHttpError(res, "ERROR_CREATE_FILE");
       next(e);
     }
   },
   /**
-   * Eliminara un registro
+   * Delete File
    * @param {*} req
    * @param {*} res
    * @param {*} next
@@ -109,23 +94,17 @@ export default {
       } = req;
       const deletedFile = await storageServices.deleteFile(idFile);
       if (!deletedFile) {
-        res.status(404).send({
-          status: "ERROR",
-          message: "Not Found",
-        });
+        handleHttpError(res, "NOT_FOUND", 404);
       } else {
         res.status(200).json({
           status: "OK",
-          message: "File Deleted",
+          message: "FILE_DELETED",
           data: deletedFile,
         });
       }
     } catch (e) {
       logger(e);
-      res.status(500).json({
-        status: "ERROR",
-        message: "Internal Server Error",
-      });
+      handleHttpError(res, "ERROR_DELETE_FILE");
       next(e);
     }
   },

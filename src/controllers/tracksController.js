@@ -1,12 +1,16 @@
 // Importar Servicios
 import tracksServices from "../services/tracksServices.js";
+// Importamos Errors
+import { handleHttpError } from "../utils/handleErrors.js";
 // Importamos debug
 import debug from "debug";
 const logger = debug("app:module-TracksController");
+// Importamos Validador
+import { body, matchedData } from "express-validator";
 
 export default {
   /**
-   * Traera Todos los Resistros
+   * Get All Tracks
    * @param {*} req
    * @param {*} res
    * @param {*} next
@@ -20,30 +24,27 @@ export default {
       });
     } catch (e) {
       logger(e);
-      res.status(500).json({
-        status: "ERROR",
-        message: "Internal Server Error",
-      });
+      handleHttpError(res, "ERROR_GET_TRACKS");
       next(e);
     }
   },
   /**
-   * Traera un solo registro
+   * Get One Track
    * @param {*} req
    * @param {*} res
    * @param {*} next
    */
   getTrack: async (req, res, next) => {
     try {
-      const {
-        params: { idTrack },
-      } = req;
+      // const {
+      //   params: { idTrack },
+      // } = req;
+      /* Manera de hacerlo desde matchedData */
+      req = matchedData(req);
+      const { idTrack } = req;
       const track = await tracksServices.getTrack(idTrack);
       if (!track) {
-        res.status(404).send({
-          status: "ERROR",
-          message: "Not Found",
-        });
+        handleHttpError(res, "NOT_FOUND", 404);
       } else {
         res.status(200).json({
           status: "OK",
@@ -52,108 +53,83 @@ export default {
       }
     } catch (e) {
       logger(e);
-      res.status(500).json({
-        status: "ERROR",
-        message: "Internal Server Error",
-      });
+      handleHttpError(res, "ERROR_GET_TRACK");
       next(e);
     }
   },
   /**
-   * Creara un registro
+   * Create Track
    * @param {*} req
    * @param {*} res
    * @param {*} next
    */
   createTrack: async (req, res, next) => {
     try {
-      const { body } = req;
-      if (!body || Object.keys(body).length === 0) {
-        res.status(400).send({
-          status: "ERROR",
-          message: "Bad Request",
-        });
-      } else {
-        const createdTrack = await tracksServices.createTrack(body);
-        res.status(201).json({
-          status: "OK",
-          message: "Track Created",
-          data: createdTrack,
-        });
-      }
+      const body = matchedData(req); //Nosm permite tener una data limpia sin datos basuras que se puedieran colar en el body
+      // const { body } = req;
+      const createdTrack = await tracksServices.createTrack(body);
+      res.status(201).json({
+        status: "OK",
+        message: "TRACK_CREATED",
+        data: createdTrack,
+      });
     } catch (e) {
       logger(e);
-      res.status(500).json({
-        status: "ERROR",
-        message: "Internal Server Error",
-      });
+      handleHttpError(res, "ERROR_CREATE_TRACK");
       next(e);
     }
   },
   /**
-   * Actualizara un registro
+   * Update Track
    * @param {*} req
    * @param {*} res
    * @param {*} next
    */
   updateTrack: async (req, res, next) => {
     try {
-      const {
-        params: { idTrack },
-      } = req;
-      const { body } = req;
+      // const {
+      //   params: { idTrack },
+      // } = req;
+      const { idTrack, ...body } = matchedData(req); //Estamos creando 2 objetos
       const updatedtrack = await tracksServices.updateTrack(idTrack, body);
       if (!updatedtrack) {
-        res.status(404).send({
-          status: "ERROR",
-          message: "Not Found",
-        });
+        handleHttpError(res, "NOT_FOUND", 404);
       } else {
         res.status(200).json({
           status: "OK",
-          message: "Track updated",
+          message: "TRACK_UPDATED",
           data: updatedtrack,
         });
       }
     } catch (e) {
       logger(e);
-      res.status(500).json({
-        status: "ERROR",
-        message: "Internal Server Error",
-      });
+      handleHttpError(res, "ERROR_UPDATE_TRACK");
       next(e);
     }
   },
   /**
-   * Eliminara un registro
+   * Delete Track
    * @param {*} req
    * @param {*} res
    * @param {*} next
    */
   deleteTrack: async (req, res, next) => {
     try {
-      const {
-        params: { idTrack },
-      } = req;
+      req = matchedData(req);
+      const { idTrack } = req;
       const deletedtrack = await tracksServices.deleteTrack(idTrack);
       if (!deletedtrack) {
-        res.status(404).send({
-          status: "ERROR",
-          message: "Not Found",
-        });
+        handleHttpError(res, "NOT_FOUND", 404);
       } else {
         res.status(200).json({
           status: "OK",
-          message: "Track Deleted",
+          message: "TRACK_DELETED",
           data: deletedtrack,
         });
       }
     } catch (e) {
       logger(e);
-      res.status(500).json({
-        status: "ERROR",
-        message: "Internal Server Error",
-      });
+      handleHttpError(res, "ERROR_DELETE_TRACK");
       next(e);
     }
   },

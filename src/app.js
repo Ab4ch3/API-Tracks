@@ -41,5 +41,5 @@ app.use(express.static(path.join(__dirname, "storage")));
 app.use(v1Router);
 
 app.listen(config.PORT, () => {
-  logger(`Servidor escuchando por el puerto ${config.PORT}`);
+  logger(`SERVER_LISTENING_ON_PORT ${config.PORT}`);
 });

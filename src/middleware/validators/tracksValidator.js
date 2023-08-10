@@ -25,5 +25,11 @@ const validatorCreateTrack = [
     return validateResults(req, res, next);
   },
 ];
+const validatorIdTrack = [
+  check("idTrack").exists().notEmpty().isMongoId(),
+  (req, res, next) => {
+    return validateResults(req, res, next);
+  },
+];
 
-export { validatorCreateTrack };
+export { validatorCreateTrack, validatorIdTrack };
