@@ -7,8 +7,6 @@ const logger = debug("app:module-StoragesController");
 import { handleHttpError } from "../utils/handleErrors.js";
 // Importamos Config
 import config from "../config/index.js";
-// Importamos Validador
-import { matchedData } from "express-validator";
 export default {
   /**
    * Get All Files

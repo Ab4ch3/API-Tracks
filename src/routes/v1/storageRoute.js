@@ -1,6 +1,6 @@
 // Importamos Router
 import routerx from "express-promise-router";
-// Importamos Controlador Tracks
+// Importamos Controlador Storages
 import storageController from "../../controllers/storageController.js";
 // Importamos middleware upload
 import uploadMiddlware from "../../middleware/uploadMiddleware.js";
