@@ -19,15 +19,36 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
+import { IncomingWebhook } from "@slack/webhook";
+// import * as fs from "fs";
 // Incialaza el Server de Express
 const app = express();
 
 // Iniciamos conexion con mongodb
 connectMongo();
 
+// conexion webhook
+const webhook = new IncomingWebhook(config.SLACK_WEBHOOK);
+// Creamo un Log con Morgan
+var accessLogStream = {
+  write: (message) => {
+    webhook.send({
+      text: message,
+    });
+  },
+};
+
 //Indicamos que usaremos morgan , y que estamos en desarrollo
-app.use(morgan("dev"));
+app.use(
+  morgan("combined", {
+    stream: accessLogStream,
+    noColors: true,
+    skip: function (req, res) {
+      //Nos enviara solo los errores
+      return res.statusCode < 400;
+    },
+  })
+);
 
 // Indicamos que usarmemos Cors
 app.use(cors());

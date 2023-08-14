@@ -7,12 +7,13 @@ import {
   validatorCreateTrack,
   validatorIdTrack,
 } from "../../middleware/validators/tracksValidator.js";
-
+import { authmiddleware } from "../../middleware/session.js";
+import { checkRole } from "../../middleware/roles.js";
 // Asignamos Router
 const router = routerx();
 
 // Especificamos Route
-router.get("/", tracksController.getAllTracks);
+router.get("/", authmiddleware, checkRole, tracksController.getAllTracks);
 router.post("/", validatorCreateTrack, tracksController.createTrack);
 router.get("/:idTrack", validatorIdTrack, tracksController.getTrack);
 router.put("/:idTrack", validatorIdTrack, tracksController.updateTrack);

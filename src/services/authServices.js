@@ -19,9 +19,9 @@ export default {
   login: async (user) => {
     let selectedUser = await models.user.findOne({ email: user.email });
 
-    let checkToken = await compare(user.password, selectedUser.password);
+    let checkPassword = await compare(user.password, selectedUser.password);
 
-    if (!checkToken) {
+    if (!checkPassword) {
       return { error: "PASSWORD_INVALID" };
     }
 

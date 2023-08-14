@@ -22,6 +22,7 @@
     "@babel/cli": "^7.22.9",
     "@babel/core": "^7.22.9",
     "@babel/preset-env": "^7.22.9",
+    "@slack/webhook": "^6.1.0",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "debug": "^4.3.4",
