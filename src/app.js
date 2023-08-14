@@ -3,7 +3,7 @@ import express from "express";
 //importamos cors
 import cors from "cors";
 // Importamos Morgan
-import morgan from "morgan";
+import morganBody from "morgan-body";
 // Importamos Debug
 import debug from "debug";
 const logger = debug("app:module-app");
@@ -11,6 +11,8 @@ const logger = debug("app:module-app");
 import config from "./config/index.js";
 // Importamos Conexion mongo
 import connectMongo from "./databases/mongodb.js";
+// Importamos Conexion sqlserver
+import { dbConnectMSSQL } from "./databases/sqlServer.js";
 // importamos Rutas
 import v1Router from "./routes/v1/index.js";
 // Importamos Path
@@ -23,9 +25,11 @@ import { IncomingWebhook } from "@slack/webhook";
 // import * as fs from "fs";
 // Incialaza el Server de Express
 const app = express();
+const ENGINE_DB = config.ENGINE_DB;
 
+ENGINE_DB === "nosql" ? connectMongo() : dbConnectMSSQL();
 // Iniciamos conexion con mongodb
-connectMongo();
+// connectMongo();
 
 // conexion webhook
 const webhook = new IncomingWebhook(config.SLACK_WEBHOOK);
@@ -39,19 +43,18 @@ var accessLogStream = {
 };
 
 //Indicamos que usaremos morgan , y que estamos en desarrollo
-app.use(
-  morgan("combined", {
-    stream: accessLogStream,
-    noColors: true,
-    skip: function (req, res) {
-      //Nos enviara solo los errores
-      return res.statusCode < 400;
-    },
-  })
-);
+morganBody(app, {
+  noColors: true,
+  stream: accessLogStream,
+  skip: function (req, res) {
+    //Nos enviara solo los errores
+    return res.statusCode < 400;
+  },
+});
 
 // Indicamos que usarmemos Cors
 app.use(cors());
+
 //Indicamos que usaremos el middleware de express para habilitar el recibir data al servidor
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
